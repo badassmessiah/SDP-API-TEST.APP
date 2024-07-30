@@ -32,6 +32,7 @@
             sendRequest = new Button();
             progressBar1 = new ProgressBar();
             modifyUser = new Button();
+            AddRequestBtn = new Button();
             SuspendLayout();
             // 
             // richTextBox1
@@ -69,11 +70,22 @@
             modifyUser.UseVisualStyleBackColor = true;
             modifyUser.Click += modifyUser_Click;
             // 
+            // AddRequestBtn
+            // 
+            AddRequestBtn.Location = new Point(12, 82);
+            AddRequestBtn.Name = "AddRequestBtn";
+            AddRequestBtn.Size = new Size(141, 29);
+            AddRequestBtn.TabIndex = 8;
+            AddRequestBtn.Text = "Add Request";
+            AddRequestBtn.UseVisualStyleBackColor = true;
+            AddRequestBtn.Click += AddRequestBtn_Click;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(AddRequestBtn);
             Controls.Add(modifyUser);
             Controls.Add(progressBar1);
             Controls.Add(sendRequest);
@@ -93,5 +105,6 @@
         private Button sendRequest;
         private ProgressBar progressBar1;
         private Button modifyUser;
+        private Button AddRequestBtn;
     }
 }
