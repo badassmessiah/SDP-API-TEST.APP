@@ -42,29 +42,29 @@ namespace SDP_API_TEST
                 progressBar1.PerformStep(); // Step 1: User input collected
 
                 var jsonContent = $@"{{
-                                    ""user"": {{
-                                        ""first_name"": ""{firstName}"",
-                                        ""middle_name"": ""{middleName}"",
-                                        ""last_name"": ""{lastName}"",
-                                        ""name"": ""{firstName} {middleName} {lastName}"",
-                                        ""is_vipuser"": ""false"",
-                                        ""employee_id"": ""9685"",
-                                        ""mobile"": ""02895902"",
-                                        ""description"": ""Help Desk manager"",
-                                        ""sms_mail_id"": ""vaska.k@mail.com"",
-                                        ""jobtitle"": ""Taxi Driver"",
-                                        ""phone"": ""{phone}"",
-                                        ""email_id"": ""{email}"",
-                                        ""cost_per_hour"": ""929"",
-                                        ""service_request_approver"": ""true"",
-                                        ""reporting_to"": {{
-                                            ""id"": ""4""
-                                        }},
-                                        ""requester_allowed_to_view"": ""0"",
-                                        ""login_name"": ""{loginName}"",
-                                        ""password"": ""1qaz!QAZ""
-                                    }}
-                                }}";
+                                        ""user"": {{
+                                            ""first_name"": ""{firstName}"",
+                                            ""middle_name"": ""{middleName}"",
+                                            ""last_name"": ""{lastName}"",
+                                            ""name"": ""{firstName} {middleName} {lastName}"",
+                                            ""is_vipuser"": ""false"",
+                                            ""employee_id"": ""9685"",
+                                            ""mobile"": ""02895902"",
+                                            ""description"": ""Help Desk manager"",
+                                            ""sms_mail_id"": ""vaska.k@mail.com"",
+                                            ""jobtitle"": ""Taxi Driver"",
+                                            ""phone"": ""{phone}"",
+                                            ""email_id"": ""{email}"",
+                                            ""cost_per_hour"": ""929"",
+                                            ""service_request_approver"": ""true"",
+                                            ""reporting_to"": {{
+                                                ""id"": ""4""
+                                            }},
+                                            ""requester_allowed_to_view"": ""0"",
+                                            ""login_name"": ""{loginName}"",
+                                            ""password"": ""1qaz!QAZ""
+                                        }}
+                                    }}";
 
                 var formData = new StringContent($"input_data={jsonContent}", Encoding.UTF8, "application/x-www-form-urlencoded");
 
@@ -122,17 +122,17 @@ namespace SDP_API_TEST
                 progressBar1.PerformStep(); // Step 1: User input collected
 
                 var jsonContent = $@"{{
-                            ""list_info"": {{
-                                ""sort_field"": ""name"",
-                                ""start_index"": 1,
-                                ""sort_order"": ""asc"",
-                                ""row_count"": 25,
-                                ""get_total_count"": true,
-                                ""search_fields"": {{
-                                    ""email_id"": ""{email}""
+                                ""list_info"": {{
+                                    ""sort_field"": ""name"",
+                                    ""start_index"": 1,
+                                    ""sort_order"": ""asc"",
+                                    ""row_count"": 25,
+                                    ""get_total_count"": true,
+                                    ""search_fields"": {{
+                                        ""email_id"": ""{email}""
+                                    }}
                                 }}
-                            }}
-                        }}";
+                            }}";
 
                 var requestUri = new Uri("https://sd.sntx.ae/api/v3/users?input_data=" + Uri.EscapeDataString(jsonContent));
 
@@ -287,7 +287,30 @@ namespace SDP_API_TEST
 
         private async void GetUserRequestsBtn_Click(object sender, EventArgs e)
         {
-            richTextBox1.Text = await Request.GetUserRequests();
+            progressBar1.Value = 0;
+            richTextBox1.Text = "Processing the request";
+
+            try
+            {
+                progressBar1.PerformStep(); // Step 1: Request started
+
+                string response = await Request.GetUserRequests();
+                richTextBox1.Text = response;
+
+                progressBar1.PerformStep(); // Step 2: Request completed
+            }
+            catch (HttpRequestException ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            finally
+            {
+                progressBar1.Value = 0; // Reset progress bar
+            }
         }
     }
 }
