@@ -284,5 +284,10 @@ namespace SDP_API_TEST
                 progressBar1.Value = 0; // Reset progress bar
             }
         }
+
+        private async void GetUserRequestsBtn_Click(object sender, EventArgs e)
+        {
+            richTextBox1.Text = await Request.GetUserRequests();
+        }
     }
 }
