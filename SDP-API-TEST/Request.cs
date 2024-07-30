@@ -65,5 +65,59 @@ namespace SDP_API_TEST
                 }
             }
         }
+
+        public static async Task<string> UpdateRequestById()
+        {
+            string requestId = Microsoft.VisualBasic.Interaction.InputBox("Enter RequestID:", "User Details", "");
+            string closureComments = Microsoft.VisualBasic.Interaction.InputBox("Enter Closure Comments:", "User Details", "");
+            var jsonContent = $@"{{
+                        ""request"": {{
+                            ""closure_info"": {{
+                                ""requester_ack_resolution"": true,
+                                ""requester_ack_comments"": """",
+                                ""closure_comments"": ""{closureComments}"",
+                                ""closure_code"": {{
+                                    ""name"": ""success""
+                                }}
+                            }}
+                        }}
+             }}";
+
+            try
+            {
+                var formData = new StringContent($"input_data={jsonContent}", Encoding.UTF8, "application/x-www-form-urlencoded");
+
+                var requestUri = new Uri($@"https://sd.sntx.ae/api/v3/requests/{requestId}/close");
+
+                using (var client = new HttpClient())
+                {
+                    client.DefaultRequestHeaders.Add("authtoken", "318BDA54-2DE3-4958-8CE7-2EDBBC79296E");
+
+                    var response = await client.PutAsync(requestUri, formData);
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        string responseBody = await response.Content.ReadAsStringAsync();
+                        Console.WriteLine("Request successful: " + responseBody);
+
+                        return "Success!";
+                    }
+                    else
+                    {
+                        string responseBody = await response.Content.ReadAsStringAsync();
+                        Console.WriteLine("Request failed: " + response.StatusCode + " - " + responseBody);
+                        return "Failed! " + response.StatusCode + " - " + responseBody;
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return ex.ToString();
+            }
+        }
+
+        
+
     }
 }

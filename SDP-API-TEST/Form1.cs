@@ -4,6 +4,7 @@ using System.Net.Http.Json;
 using System.Text;
 using System.Windows.Forms;
 using System.Text.Json;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace SDP_API_TEST
 {
@@ -255,6 +256,33 @@ namespace SDP_API_TEST
             }
         }
 
+        private async void CloseRequestBtn_Click(object sender, EventArgs e)
+        {
+            string status = "";
 
+            progressBar1.Value = 0;
+            richTextBox1.Text = "Processing the request";
+
+            try
+            {
+                progressBar1.PerformStep(); // Step 1: Request started
+
+                status = await Request.UpdateRequestById();
+                richTextBox1.Text = status;
+                progressBar1.PerformStep(); // Step 2: Request completed
+            }
+            catch (HttpRequestException ex)
+            {
+                MessageBox.Show(ex.Message + status);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message + status);
+            }
+            finally
+            {
+                progressBar1.Value = 0; // Reset progress bar
+            }
+        }
     }
 }
