@@ -10,7 +10,7 @@ namespace SDP_API_TEST
 {
     public static class Request
     {
-        public static async Task<bool> AddRequest()
+        public static async Task<string> AddRequest()
         {
             // Prompt the user for their details
             string email = Microsoft.VisualBasic.Interaction.InputBox("Enter Requester Email:", "User Details", "email@email.com");
@@ -18,46 +18,52 @@ namespace SDP_API_TEST
             string description = Microsoft.VisualBasic.Interaction.InputBox("Enter Request Description:", "User Details", "");
 
             var jsonContent = $@"{{
-                    ""request"": {{
-                        ""subject"": ""{subject}"",
-                        ""description"": ""{description}"",
-                        ""requester"": {{
-                            ""email_id"": ""{email}""
-                        }},
-                        ""impact_details"": ""Routine tasks are pending due to mail server problem"",
-                        ""resolution"": {{
-                            ""content"": ""Mail Fetching Server problem has been fixed""
-                        }},
-                        ""status"": {{
-                            ""name"": ""Open""
+                        ""request"": {{
+                            ""subject"": ""{subject}"",
+                            ""description"": ""{description}"",
+                            ""requester"": {{
+                                ""email_id"": ""{email}""
+                            }},
+                            ""resolution"": {{
+                                ""content"": """"
+                            }},
+                            ""status"": {{
+                                ""name"": ""Open""
+                            }}
                         }}
-                    }}
-                }}";
+                    }}";
+
+            var formData = new StringContent($"input_data={jsonContent}", Encoding.UTF8, "application/x-www-form-urlencoded");
 
             var requestUri = new Uri("https://sd.sntx.ae/api/v3/requests");
 
             using (var client = new HttpClient())
             {
-                client.DefaultRequestHeaders.Add("authtoken", "318BDA54-2DE3-4958-8CE7-2EDBBC79296E");
-
-                var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
-
-                var response = await client.PostAsync(requestUri, content);
-
-                if (response.IsSuccessStatusCode)
+                try
                 {
-                    string responseBody = await response.Content.ReadAsStringAsync();
-                    Console.WriteLine("Request successful: " + responseBody);
+                    client.DefaultRequestHeaders.Add("authtoken", "318BDA54-2DE3-4958-8CE7-2EDBBC79296E");
 
-                    return true;
+                    var response = await client.PostAsync(requestUri, formData);
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        string responseBody = await response.Content.ReadAsStringAsync();
+                        Console.WriteLine("Request successful: " + responseBody);
+
+                        return "Success!";
+                    }
+                    else
+                    {
+                        string responseBody = await response.Content.ReadAsStringAsync();
+                        Console.WriteLine("Request failed: " + response.StatusCode + " - " + responseBody);
+                        return "Failed! " + response.StatusCode + " - " + responseBody;
+                    }
                 }
-                else
+                catch (Exception ex)
                 {
-                    Console.WriteLine("Request failed: " + response.StatusCode);
-                    return false;
+                    return ex.ToString();
                 }
             }
-
         }
     }
 }

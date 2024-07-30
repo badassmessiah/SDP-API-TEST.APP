@@ -229,6 +229,7 @@ namespace SDP_API_TEST
 
         private async void AddRequestBtn_Click(object sender, EventArgs e)
         {
+            string status = "";
             progressBar1.Value = 0;
             richTextBox1.Text = "Processing the request";
 
@@ -236,17 +237,17 @@ namespace SDP_API_TEST
             {
                 progressBar1.PerformStep(); // Step 1: Request started
 
-                await Request.AddRequest();
-
+                status = await Request.AddRequest();
+                richTextBox1.Text = status;
                 progressBar1.PerformStep(); // Step 2: Request completed
             }
             catch (HttpRequestException ex)
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.Message + status);
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.Message + status);
             }
             finally
             {
