@@ -5,6 +5,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.Text.Json;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.ListView;
 
 namespace SDP_API_TEST
 {
@@ -310,6 +311,61 @@ namespace SDP_API_TEST
             finally
             {
                 progressBar1.Value = 0; // Reset progress bar
+            }
+        }
+
+        private async void GetUsersBtn_Click(object sender, EventArgs e)
+        {
+            var jsonContent = $@"{{
+                ""list_info"": {{
+                    ""sort_field"": ""name"",
+                    ""start_index"": 1,
+                    ""sort_order"": ""asc"",
+                    ""row_count"": ""100"",
+                    ""get_total_count"": true
+                }},
+                ""fields_required"": [
+                    ""name"",
+                    ""login_name"",
+                    ""email_id"",
+                    ""employee_id"",
+                    ""first_name"",
+                    ""middle_name"",
+                    ""last_name""
+                ]
+            }}";
+
+            var formData = new StringContent($"input_data={jsonContent}", Encoding.UTF8, "application/x-www-form-urlencoded");
+
+            var request = new HttpRequestMessage
+            {
+                Method = HttpMethod.Get,
+                RequestUri = new Uri("https://sd.sntx.ae/api/v3/users"),
+                Content = formData
+            };
+            request.Headers.Add("authtoken", "318BDA54-2DE3-4958-8CE7-2EDBBC79296E");
+
+            try
+            {
+                var response = await client.SendAsync(request);
+                response.EnsureSuccessStatusCode();
+
+                string responseBody = await response.Content.ReadAsStringAsync();
+                var userResponse = JsonSerializer.Deserialize<UserResponse>(responseBody);
+
+                // Now you can access the users from userResponse.users
+                foreach (var user in userResponse.users)
+                {
+                    richTextBox1.Text += ($"User: {user.name}, Email: {user.email_id}, ID: {user.id}, Is Technician: {user.is_technician}\n");
+                }
+            }
+            catch (HttpRequestException ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
             }
         }
     }

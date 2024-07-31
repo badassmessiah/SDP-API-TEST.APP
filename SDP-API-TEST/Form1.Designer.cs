@@ -35,6 +35,7 @@
             AddRequestBtn = new Button();
             CloseRequestBtn = new Button();
             GetUserRequestsBtn = new Button();
+            GetUsersBtn = new Button();
             SuspendLayout();
             // 
             // richTextBox1
@@ -102,11 +103,22 @@
             GetUserRequestsBtn.UseVisualStyleBackColor = true;
             GetUserRequestsBtn.Click += GetUserRequestsBtn_Click;
             // 
+            // GetUsersBtn
+            // 
+            GetUsersBtn.Location = new Point(12, 187);
+            GetUsersBtn.Name = "GetUsersBtn";
+            GetUsersBtn.Size = new Size(141, 29);
+            GetUsersBtn.TabIndex = 11;
+            GetUsersBtn.Text = "Get All Users";
+            GetUsersBtn.UseVisualStyleBackColor = true;
+            GetUsersBtn.Click += GetUsersBtn_Click;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(GetUsersBtn);
             Controls.Add(GetUserRequestsBtn);
             Controls.Add(CloseRequestBtn);
             Controls.Add(AddRequestBtn);
@@ -132,5 +144,6 @@
         private Button AddRequestBtn;
         private Button CloseRequestBtn;
         private Button GetUserRequestsBtn;
+        private Button GetUsersBtn;
     }
 }
